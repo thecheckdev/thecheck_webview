@@ -1,0 +1,4 @@
+@function fnArrowLeft($color) {
+	$url: "data:image/svg+xml,%3Csvg width='22' height='18' viewBox='0 0 22 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M3.80069 10L10.1924 16.5455L8.77815 18L0 9L8.77815 0L10.1924 1.45455L3.80069 8H21.9999V10H3.80069Z' fill='#{$color}'/%3E%3C/svg%3E%0A";
+	@return url($url);
+}
