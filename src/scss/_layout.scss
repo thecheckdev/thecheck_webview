@@ -8,7 +8,7 @@ header{
 	left: 0;
 	background: $white; 
 	h1{
-		font-size: 20px;
+		font-size: calcRem(20px);
 		line-height: 60px;
 		padding: 0 7% 0 14%;
 		box-sizing: border-box;
