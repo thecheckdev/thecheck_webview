@@ -7,57 +7,104 @@
 		<meta name="theme-color" content="#ffffff">
 		<!-- <link rel="shortcut icon" href="ico_url" type="image/x-icon"> -->
 		<title>공지사항 리스트 | 더체크</title> <!-- [페이지명 | 사이트명] -->
-		<link rel="stylesheet" type="text/css" href="/css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="/css/style.css"/> 
 		<!-- thecheck_webview -->
 		<!-- <link rel="stylesheet" type="text/css" href="/thecheck_webview/css/style.css"/> -->
 		 
 	</head> 
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			var pop_detail = document.getElementsByClassName("pop_detail")[0];
+			var btn_prev = document.querySelectorAll("header .btn_prev")[0];
+			var btn_close = document.querySelectorAll("header .btn_close")[0];
+			var pop_container = document.querySelectorAll(".pop_detail .bx")[0];
+			pop_container.style.width = window.innerWidth+"px";
+			btn_close.addEventListener("click", function(){
+				pop_detail.classList.remove("show");
+				btn_prev.classList.remove("hide");
+				btn_close.classList.add("hide");
+			});
+		});
+		window.addEventListener('resize', function(){
+			var pop_container = document.querySelectorAll(".pop_detail .bx")[0];
+			pop_container.style.width = window.innerWidth+"px";
+		});
+		function fnOpenPop() {
+			var body = document.getElementsByTagName("body")[0];
+			var pop_detail = document.getElementsByClassName("pop_detail")[0];
+			var btn_prev = document.querySelectorAll("header .btn_prev")[0];
+			var btn_close = document.querySelectorAll("header .btn_close")[0];
+			body.classList.add("no_scroll");
+			pop_detail.classList.add("show");
+			btn_prev.classList.add("hide");
+			btn_close.classList.remove("hide");
+		}
+	</script>
 <body>
 	<header>
 		<button type="button" class="btn_prev">뒤로</button>
+		<button type="button" class="btn_close hide">뒤로</button>
 		<h1>공지사항</h1>
 	</header>
 	<section class="container">
 		<h2 class="blind">공지사항 리스트</h2>
 		<ul class="list">
 			<li>
-				<a href="detail.html">
+				<a href="javascript:fnOpenPop();">
 					<h3><span class="badge">[공지]</span> 정산서비스 중 미입금 유형 확인이 안되는 오류</h3>
 					<span class="data">2021-06-09</span>
 				</a>
 			</li>
 			<li>
-				<a href="detail.html">
+				<a href="javascript:fnOpenPop();">
 					<h3><span class="badge">[공지]</span> 정산서비스 중 미입금 유형 확인이 안되는 오류</h3>
 					<span class="data">2021-06-09</span>
 				</a>
 			</li>
 			<li>
-				<a href="detail.html">
+				<a href="javascript:fnOpenPop();">
 					<h3><span class="badge">[공지]</span> 정산서비스 중 미입금 유형 확인이 안되는 오류</h3>
 					<span class="data">2021-06-09</span>
 				</a>
 			</li>
 			<li>
-				<a href="detail.html">
+				<a href="javascript:fnOpenPop();">
 					<h3><span class="badge">[공지]</span> 정산서비스 중 미입금 유형 확인이 안되는 오류정산서비스 중 미입금 유형 확인이 안되는 오류정산서비스 중 미입금 유형 확인이 안되는 오류정산서비스 중 미입금 유형 확인이 안되는 오류</h3>
 					<span class="data">2021-06-09</span>
 					<img src="https://thecheckdev.github.io/thecheck_webview/img/temp.jpg" class="thum" alt="썸네일">
 				</a>
 			</li>
 			<li>
-				<a href="detail.html">
+				<a href="javascript:fnOpenPop();">
 					<h3><span class="badge">[공지]</span> 정산서비스 중 미입금 유형 확인이 안되는 오류정산서비스 중 미입금 유형 확인이 안되는 오류정산서비스 중 미입금 유형 확인이 안되는 오류정산서비스 중 미입금 유형 확인이 안되는 오류</h3>
 					<span class="data">2021-06-09</span>
 				</a>
 			</li>
 			<li>
-				<a href="detail.html">
+				<a href="javascript:fnOpenPop();">
 					<h3><span class="badge">[공지]</span> 정산서비스 중 미입금 유형 확인이 안되는 오류정산서비스 중 미입금 유형 확인이 안되는 오류정산서비스 중 미입금 유형 확인이 안되는 오류정산서비스 중 미입금 유형 확인이 안되는 오류</h3>
 					<span class="data">2021-06-09</span>
 				</a>
 			</li>
 		</ul>
 	</section>
-</body>
+	<div class="pop_detail">
+		<section class="bx">
+			<div class="top">
+				<h2><span class="badge">[정보]</span> 근로계약서 미작성시 벌금 500만원이 부과된다는 사실을 알고 계시나요?</h2>
+				<span class="data">2021-06-09</span>
+			</div>
+			<article class="cont">
+				사장님, 안녕하세요. 사장님의 비즈니스 파트너 더체크입니다.<br>
+				개정 근로기준법으로 인해 근로계약서 미작성 시 최대 500만원의 벌금이 부과된다는 사실, 알고 계셨나요?
+				<img src="https://thecheckdev.github.io/thecheck_webview/img/temp2.jpg" alt="썸네일">
+				<a href="#">(www.thecheck.co.kr)</a>
+				과태료 부과 대상이 되지 않기 위해서는 정규직은 물론 단 1시간을 일하는 아르바이트 직원을 고용하더라도 반드시 근로계약서를 작성해야 합니다. 
+				그럼에도 불구하고, 어려운 용어와 복잡한 과정으로  인해 사장님 중 60% 이상이 근로계약서를 작성하지 않고 있으며, 최근 들어 이를 악용하여 사업자를 협박하고 신고 포상금을 받는 사례들이 발생하고 있습니다.
+				<a href="#">(www.thecheck.co.kr)</a>
+				그럼에도 불구하고, 어려운 용어와 복잡한 과정으로  인해 사장님 중 60% 이상이 근로계약서를 작성하지 않고 있으며, 최근 들어 이를 악용하여 사업자를 협박하고 신고 포상금을 받는 사례들이 발생하고 있습니그럼에도 불구하고, 어려운 용어와 복잡한 과정으로  인해 사장님 중 60% 이상이 근로계약서를 작성하지 않고 있으며, 최근 들어 이를 악용하여 사업자를 협박하고 신고 포상금을 받는 사례들이 발생하고 있습니그럼에도 불구하고, 어려운 용어와 복잡한 과정으로  인해 사장님 중 60% 이상이 근로계약서를 작성하지 않고 있으며, 최근 들어 이를 악용하여 사업자를 협박하고 신고 포상금을 받는 사례들이 발생하고 있습니
+			</article>
+		</section>
+	</div>
+</body> 
 </html>  

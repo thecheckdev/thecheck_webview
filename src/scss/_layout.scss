@@ -2,7 +2,7 @@ header{
 	width: 100%;
 	height: 60px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-	z-index: 1;
+	z-index: 10;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -10,10 +10,13 @@ header{
 	h1{
 		font-size: 20px;
 		line-height: 60px;
+		padding: 0 7% 0 14%;
+		box-sizing: border-box;
 		font-weight: $bold;
 		text-align: center;
+		@include ellipsis;
 	}
-	.btn_prev{
+	.btn_prev, .btn_close{
 		content:"";
 		@include setContent(22px, 18px, block, absolute);
 		@include bgSvg(fnArrowLeft("rgb(0,0,0)") no-repeat);
@@ -21,6 +24,15 @@ header{
 		top:50%;
 		transform: translateY(-50%);
 		left: 6%;
+		&.hide{
+			display: none;
+		}
+		&.show{
+			display: block;
+		}
+	}
+	.btn_close{
+		@include setContent(22px, 18px, block, absolute);
 	}
 }
 .container{
