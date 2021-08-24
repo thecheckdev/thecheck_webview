@@ -19,7 +19,7 @@ header{
 	.btn_prev, .btn_close{
 		content:"";
 		@include setContent(22px, 18px, block, absolute);
-		@include bgSvg(fnArrowLeft("rgb(0,0,0)") no-repeat);
+		@include bgSvg(fnArrowLeft("rgb(0,0,0)"), no-repeat);
 		@include blind;
 		top:50%;
 		transform: translateY(-50%);
