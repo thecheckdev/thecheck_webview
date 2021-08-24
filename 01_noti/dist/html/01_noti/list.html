@@ -24,6 +24,16 @@
 				btn_prev.classList.remove("hide");
 				btn_close.classList.add("hide");
 			});
+			var uanaVigatorOs = navigator.userAgent;
+			var AgentUserOs = uanaVigatorOs.replace(/ /g,'');
+			AgentUserOs = AgentUserOs.toLowerCase();
+			console.log(AgentUserOs);
+			var checkOs = AgentUserOs.indexOf("iphone") == -1 ? -1 : 1; 
+			checkOs = AgentUserOs.indexOf("ipad") == -1 ? -1 : checkOs; 
+			checkOs = AgentUserOs.indexOf("mac") == -1 ? -1 : checkOs; 
+			if (checkOs == -1) {
+				document.getElementsByTagName("body")[0].classList.add("n_apple");
+			}
 		});
 		window.addEventListener('resize', function(){
 			var pop_container = document.querySelectorAll(".pop_detail .bx")[0];
