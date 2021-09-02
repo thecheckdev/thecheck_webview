@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<meta name="theme-color" content="#ffffff">
+		<!-- <link rel="shortcut icon" href="ico_url" type="image/x-icon"> -->
+		<title>공지사항 리스트 | 더체크</title> <!-- [페이지명 | 사이트명] -->
+		<link rel="stylesheet" type="text/css" href="/css/style.css"/> 
+		<script src="/js/jquery-3.6.0.min.js"></script>
+		<!-- thecheck_webview -->
+		<!-- <link rel="stylesheet" type="text/css" href="/thecheck_webview/css/style.css?v=210819"/> -->
+		
+        <script>         
+            var strCd       = getParam('strCd');
+            var token       = getParam('token');
+            var loginId     = getParam('loginId');
+            var targetUrl   = getParam('targetUrl');
+            var PLATFORM_ID = 'P01';
+            var BASE_URL    = 'https://dev1.thecheck.co.kr:9001';
+            var termsIdList = []; // 동의여부 저장에 사용되는 termsIdList 변수 값
+            
+            var MALL_URL = 'https://ofm.thecheck.co.kr/api/thecheck/enter?strCd={STR_CD}&token={TOKEN}&targetUrl={TARGET_URL}';
+            var MALL_URL_POST = 'https://ofm.thecheck.co.kr/api/thecheck/enter';
+            var REGIST_CHECK_URL = 'https://ofm.thecheck.co.kr/api/thecheck/user-check?strCd='+strCd;
+    
+            $(function(){
+                if(isParameterValidated()){
+                    $.ajax({
+                        method: 'GET',
+                        url: REGIST_CHECK_URL,
+                        dataType: 'json',
+                        async: false
+                    }).done(function(data) {
+                        //Body: { ""resultMessage": "결과메시지" }
+                        console.log(data.resultCode);
+                        if(data.resultCode == "9999") { // 미가입회원: 9999
+                            // 약관동의 받았는지 여부 체크
+                            var post_data = {
+                                "platformId": PLATFORM_ID,
+                                "loginId": loginId,
+                                "token": token
+                            };
+                            $.ajax({
+                                method: 'POST',
+                                url: BASE_URL+'/api/v1/platform/termsCheck',
+                                contentType: 'application/json',
+                                data: JSON.stringify(post_data),
+                                dataType: 'json',
+                                xhrFields: {
+                                    withCredentials: false
+                                }
+                            })
+                            .done(function( data, textStatus, jqXHR ) {
+                                if(data.status == 'SUCCESS') {
+                                    // fnDisplayAgree();
+                                    // 약관화면 표시
+                                    if(Array.isArray(data.data) && data.data.length > 0) {
+                                        var htmlCheckboxes = '';
+                                        for(var i=0; i<data.data.length; i++) {
+                                            // 모든 약관ID및 동의여부 전역변수값 세팅
+                                            termsIdList.push({
+                                                termsId: data.data[i].termsId,
+                                                mandatory: data.data[i].mandatory,
+                                                checked: data.data[i].checked,
+                                                termsContent: data.data[i].termsContent,
+                                                termsTitle: data.data[i].termsTitle
+                                            });
+                
+                                            // 동의하지 않은 항목만 표시해서 동의 받음.
+                                            if(data.data[i].checked == 'N') {
+                                                htmlCheckboxes += '<div class="bx_chk"><input type="checkbox" onchange="onchangeCheckbox('+i+', this.checked);" id="chk'+i+'"> <label id="termsTitle" for="chk'+i+'">'+data.data[i].termsTitle+'</label>'
+                                                    + ($.trim(data.data[i].termsContent) !== '' ? '<a href="javascript:fnOpenTerms('+i+');">보기</a></div>':'</div>'); 
+                                            }
+                                        }
+                
+                                        // 필요한 약관에 모두 동의했으면 바로 온푸몰로 이동
+                                        if(requiredTermsAgreed()) {
+                                            redirectToMall();
+                                        }
+                                        else {
+                                            fnDisplayAgree();
+                                            $('#divAgreements').html(htmlCheckboxes);
+                                        }
+                                    }
+                                    else {
+                                        fnLog("(약관)정보가 존재하지 않습니다.");
+                                        return;
+                                    }
+                                } else {
+                                    // TODO: 약관동의 조회 API에서 오류가 났을 경우 처리 (status != SUCCESS)
+                                    fnLog("(약관)정보를 불러오는 중에 에러가 발생했습니다.");
+                                }
+                            })
+                            .fail(function( jqXHR, textStatus, errorThrown ) {
+                                fnLog("(약관)정보를 불러오지 못했습니다.\n다시 시도해주시기 바랍니다.");
+                            })
+                            .always(function() {});
+                            return;
+                        }
+                        else if(data.resultCode == "0000"){ // 정상회원:0000
+                            redirectToMall();
+                        }else {
+                            fnLog(data.resultMessage);
+                        }
+                    }).fail(function(data) {
+                        alert("페이지를 불러오지 못했습니다.\n다시 시도해주시기 바랍니다.");
+                        fnLog(data);
+                        fnRedirectToMall();
+                    });
+                }else{
+                    fnRedirectToMall();
+                }
+                
+            });
+    
+            // 밸리데이션 체크
+            function isParameterValidated(){
+                fnLog(strCd+'<br/>'+token+'<br/>'+loginId+'<br/>'+targetUrl);
+                if(strCd == null || strCd === ''){
+                    alert("가맹점 정보(00)가 필요합니다.");
+                    return false;
+                }
+                else if(token == null || token === ''){
+                    alert("가맹점 정보(01)가 필요합니다.");
+                    return false;
+                }
+                else if(loginId == null || loginId === ''){
+                    alert("가맹점 정보(02)가 필요합니다.");
+                    return false;
+                }
+                else if(targetUrl == null || targetUrl === ''){
+                    alert("가맹점 정보(03)가 필요합니다.");
+                    return false;
+                }
+                return true;
+            }
+
+            // 모든 약관에 동의했는지 여부
+            // 결정사항: 필수 약관에만 모두 동의했으면 온푸몰로 이동
+            function requiredTermsAgreed() {
+                var result = true;
+                for(var i=0; i<termsIdList.length; i++) {
+                    if(termsIdList[i]['mandatory'] === true // 필수 약관 여부
+                            && termsIdList[i]['checked'] == 'N') {
+                        result = false;
+                        break;
+                    }
+                }
+    
+                return result;
+            }
+    
+            // 온푸몰로 이동
+            function redirectToMall() {
+                /*
+                var url = MALL_URL
+                    .replace('{STR_CD}', strCd)
+                    .replace('{TOKEN}', token)
+                    .replace('{TARGET_URL}', targetUrl);
+                */
+                var post_data = {
+                            "strCd": strCd,
+                            "targetUrl": targetUrl,
+                            "token": token
+                        };
+                $.ajax({
+                    method: 'POST',
+                    url: MALL_URL_POST,
+                    contentType: 'application/json',
+                    dataType: 'JSON',
+                    data: JSON.stringify(post_data)
+                })
+                .done(function( data, textStatus, jqXHR ) {
+                    fnLog(data.resultCode);
+                    fnLog(data.targetUrl);
+                    if(data.resultCode === "0000"){
+                        window.location = data.targetUrl;
+                    }else if(data.resultCode === "9999"){
+                        fnLog("redirectToMall result : "+data.resultCode+"\n"+data.resultMessage+"\n token="+token);
+                    }
+                });
+            }
+    
+            // 약관동의 후 온푸몰로 이동
+            function updateAndRedirectToMall() {
+                let alertAgree = true;
+                termsIdList.forEach(terms => {
+                    console.log(terms);
+                    if(terms.mandatory && terms.checked === 'N'){
+                        alertAgree = false;
+                        return;
+                    }
+                });
+                if(!alertAgree){
+                    alert(`메뉴플러스 이용을 위한 필수 항목 동의가 필요합니다`);
+                    return false;
+                }
+                var post_data = {
+                    "platformId": PLATFORM_ID,
+                    "loginId": loginId,
+                    "termsIdList": termsIdList
+                };
+                $.ajax({
+                    method: 'POST',
+                    url: BASE_URL+'/api/v1/platform/termsCheck/update',
+                    contentType: 'application/json',
+                    data: JSON.stringify(post_data),
+                    dataType: 'json'
+                })
+                .done(function( data, textStatus, jqXHR ) {
+                    console.log(data);
+                    if(data.status == 'SUCCESS') {
+                        if( requiredTermsAgreed() ) {
+                            redirectToMall();
+                        } else {
+                            alert("메뉴플러스 이용을 위한 추가 동의가 필요합니다");
+                            return;
+                        }
+                    } else {
+                        // 약관동의 저장 API에서 오류가 났을 경우 처리 (status != SUCCESS)
+                        alert("다시 시도해주시기 바랍니다.");
+                        location.reload();
+                    }
+                })
+                .fail(function( jqXHR, textStatus, errorThrown ) {
+                    alert("다시 시도해주시기 바랍니다.");
+                    location.reload();
+                })
+                .always(function() {});
+            }
+            function onchangeCheckbox(idx, val) {
+                if(val == true) {
+                    termsIdList[idx]['checked'] = 'Y'
+                } else {
+                    termsIdList[idx]['checked'] = 'N'
+                }
+                var check = false;
+                var total = $("#divAgreements input").length;
+                var checked = $("#divAgreements input:checked").length;
+                if (checked == total) $("#chk_all").prop("checked", true);
+                else $("#chk_all").prop("checked", false);
+            }
+    
+            function getParam(key) {
+                return getQueryStringObject()[key]
+            }
+    
+            function getQueryStringObject() {
+                var a = window.location.search.substr(1).split('&');
+                if (a == "") return {};
+                var b = {};
+                for (var i = 0; i < a.length; ++i) {
+                    /*
+                    var p = a[i].split('=', 2);
+                    if (p.length == 1)
+                        b[p[0]] = "";
+                    else
+                        b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+                    */
+                    const pivot = a[i].indexOf("=");
+                    const key = a[i].substr(0,pivot);
+                    const value = a[i].substr(pivot+1);
+                    b[key] = decodeURIComponent(value.replace(/\+/g, " "));
+                    
+                }
+                return b;
+            }
+            function fnRedirectToMall(){
+                if (window.theCheck && window.theCheck.isTheCheckWebView) {
+                    window.theCheck.close();
+                }
+            }
+            function fnChkAll(){
+                $("input:checkbox").prop("checked", $("#chk_all").is(":checked"));                
+                termsIdList.forEach(terms => {
+                    terms.checked = ($("#chk_all").is(":checked")) ? 'Y' : 'N';
+                });
+            }
+            function fnClose(){
+                $(".pop_terms").removeClass("show");
+            }
+            function fnOpenTerms(i){
+                $(".pop_terms").addClass("show");
+                if($.trim(termsIdList[i].termsContent) !== "") $(".cont").html(termsIdList[i].termsContent);
+            }
+
+            function fnLog(msg){
+                // $(".loading").append("<p>"+msg+"</p>");
+            }
+
+            function fnDisplayAgree(){
+                $(".wrap_pop").show();
+            }
+        </script>
+     
+	</head> 
+	<div class="wrap_pop" style="display: none;">
+		<div class="pop">
+			<p class="txt">
+				<span class="tit">메뉴플러스 이용을 위한<br>추가 동의가 필요합니다</span>
+				<span>엄선된 밀키트와 식자재를 만나보세요</span>
+			</p>
+			<div class="bx_chk"><input type="checkbox" name="" id="chk_all" onchange="fnChkAll()"><label class="chk_all" for="chk_all">약관에 모두 동의합니다.</label></div>
+			<div id="divAgreements"></div>
+			<div class="bx_btn">
+				<button id="btnAgree" type="button" onclick="fnRedirectToMall()" class="btn close">닫기</button>
+				<button id="btnAgree" type="button" onclick="updateAndRedirectToMall()" class="btn">확인</button> 
+			</div>
+		</div>
+        <div class="pop_terms">
+            <div class="top">
+                <h1><img src="../../img/logo.png" class="logo"/> 더체크 마케팅정보 수신동의</h1> 
+                <button id="btnAgree" type="button" onclick="fnClose()" class="btn_close">닫기</button>
+            </div>
+            <div class="cont"></div>
+        </div>
+	</div>
+    <div class="loading">로딩중</div>
+</body>
+</html>

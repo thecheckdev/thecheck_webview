@@ -7,9 +7,10 @@
 		<meta name="theme-color" content="#ffffff">
 		<!-- <link rel="shortcut icon" href="ico_url" type="image/x-icon"> -->
 		<title>공지사항 리스트 | 더체크</title> <!-- [페이지명 | 사이트명] -->
-		<!-- <link rel="stylesheet" type="text/css" href="/css/style.css"/>   -->
+		<link rel="stylesheet" type="text/css" href="/css/style.css"/> 
+		<script src="/js/jquery-3.6.0.min.js"></script>
 		<!-- thecheck_webview -->
-		<link rel="stylesheet" type="text/css" href="/thecheck_webview/css/style.css?v=2108190"/>
+		<!-- <link rel="stylesheet" type="text/css" href="/thecheck_webview/css/style.css?v=210819"/> -->
 		 
 	</head> 
 	<script>
@@ -24,6 +25,16 @@
 				btn_prev.classList.remove("hide");
 				btn_close.classList.add("hide");
 			});
+			var uanaVigatorOs = navigator.userAgent;
+			var AgentUserOs = uanaVigatorOs.replace(/ /g,'');
+			AgentUserOs = AgentUserOs.toLowerCase();
+			console.log(AgentUserOs);
+			var checkOs = AgentUserOs.indexOf("iphone") == -1 ? -1 : 1; 
+			checkOs = AgentUserOs.indexOf("ipad") == -1 ? -1 : checkOs; 
+			checkOs = AgentUserOs.indexOf("mac") == -1 ? -1 : checkOs; 
+			if (checkOs == -1) {
+				document.getElementsByTagName("body")[0].classList.add("n_apple");
+			}
 		});
 		window.addEventListener('resize', function(){
 			var pop_container = document.querySelectorAll(".pop_detail .bx")[0];
