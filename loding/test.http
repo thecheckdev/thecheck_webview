@@ -1,0 +1,7 @@
+POST https://dev1.thecheck.co.kr:9001/api/v1/platform/termsCheck
+Content-Type : Application/json
+
+{
+        "platformId": "P02",
+        "loginId": "mckim2"
+}

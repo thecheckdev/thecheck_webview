@@ -59,7 +59,7 @@ function sassComp(done) {
 		.pipe(sass.sync().on('error', sass.logError))
 		.pipe(autoprefixer())
 		.pipe(sass({ outputStyle: 'compressed' })) //nested, expanded, compact, compressed
-		.pipe(sourcemaps.write())
+		// .pipe(sourcemaps.write())
 		.pipe(gulp.dest(paths.style.output))
 		.pipe(browsersync.reload({ stream: true }));
 	// 압축버전 - 이버전은 소스맵이 안맞아서 배포용으로 따로 뺌

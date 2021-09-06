@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../../../../api_prod_test/Contents"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "dist 2"
+	}
+}

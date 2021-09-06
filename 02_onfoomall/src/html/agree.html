@@ -29,8 +29,22 @@
             var termsIdList = []; // 동의여부 저장에 사용되는 termsIdList 변수 값
     
             var MALL_URL = 'https://ofm.thecheck.co.kr/api/thecheck/enter?strCd={STR_CD}&token={TOKEN}&targetUrl={TARGET_URL}';
+            // var REGIST_CHECK_URL = 'https://ofm.thecheck.co.kr/api/thecheck/user-check';
+            var REGIST_CHECK_URL = 'https://ofm.thecheck.co.kr/api/thecheck/user-check?strCd='+strCd;
     
             $(function(){
+                //온푸몰 회원가입 체크
+                $.ajax({
+                    method: 'GET',
+                    url: REGIST_CHECK_URL,
+                    dataType: 'json'
+                }).done(function(data) {
+                    if(data.resultCode == "9999") return;
+                    else if(data.resultCode == "0000") redirectToMall(); //resultCode": 정상회원:0000, 회원정보없음: 9999
+                    else alert(data.resultMessage);
+                }).fail(function(data) {
+                    alert("페이지를 불러오지 못했습니다.\n다시 시도해주시기 바랍니다.");
+                })
                 // TODO: Validate input params
                 // 동의 받았는지 여부 체크
                 var post_data = {
@@ -50,7 +64,6 @@
                     if(data.status == 'SUCCESS') {
                         if(Array.isArray(data.data) && data.data.length > 0) {
                             var htmlCheckboxes = '';
-                            console.log(data);
                             for(var i=0; i<data.data.length; i++) {
                                 // 모든 약관ID및 동의여부 전역변수값 세팅
                                 termsIdList.push({
