@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="noti"> <!-- 210906 noti 클래스 추가-->
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -19,11 +19,13 @@
 			var btn_prev = document.querySelectorAll("header .btn_prev")[0];
 			var btn_close = document.querySelectorAll("header .btn_close")[0];
 			var pop_container = document.querySelectorAll(".pop_detail .bx")[0];
-			pop_container.style.width = window.innerWidth+"px";
+			var body = document.getElementsByTagName("body")[0];
+			// pop_container.style.width = window.innerWidth+"px";<!-- 210906 해당 코드 삭제 부탁드립니다 -->
 			btn_close.addEventListener("click", function(){
 				pop_detail.classList.remove("show");
 				btn_prev.classList.remove("hide");
 				btn_close.classList.add("hide");
+				body.classList.remove("no_scroll");
 			});
 			var uanaVigatorOs = navigator.userAgent;
 			var AgentUserOs = uanaVigatorOs.replace(/ /g,'');
@@ -38,7 +40,7 @@
 		});
 		window.addEventListener('resize', function(){
 			var pop_container = document.querySelectorAll(".pop_detail .bx")[0];
-			pop_container.style.width = window.innerWidth+"px";
+			// pop_container.style.width = window.innerWidth+"px";<!-- 210906 해당 코드 삭제 부탁드립니다 -->
 		});
 		function fnOpenPop() {
 			var body = document.getElementsByTagName("body")[0];
