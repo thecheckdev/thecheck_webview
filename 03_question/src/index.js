@@ -9,12 +9,12 @@ import "react-app-polyfill/stable";
 import "scss/style.scss"; 
 
 ReactDOM.render(
-  <BrowserRouter>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </BrowserRouter>,
-  document.getElementById('root')
+	<BrowserRouter>
+		<React.StrictMode>
+			<App/>
+		</React.StrictMode>
+	</BrowserRouter>,
+	document.getElementById('root')
 );
 
 reportWebVitals();

@@ -1,17 +1,51 @@
-import React from "react";
-import { useQuestionNowStep } from "QuestionContext";
+import React, {useState} from "react";
 import Start from "components/Start";
-import QuestionStep from "components/QuestionStep";
+import QuestionStep from "components/StepContent";
+
+const initialQuestion =[{
+		id : "r0",
+		name: "제로",
+		score: 100,
+	},{
+		id : "r1",
+		name: "닭발",
+		score: 0,
+	},{
+		id : "r2",
+		name: "함박스테이크",
+		score: 0,
+	},{
+		id : "r3",
+		name: "족발",
+		score: 0,
+	},{
+		id : "r4",
+		name: "제육볶음",
+		score: 0,
+	},{
+		id : "r5",
+		name: "찜닭",
+		score: 0,
+	},{
+		id : "r6",
+		name: "뼈해장국",
+		score: 0,
+	},{
+		id : "r7",
+		name: "돈가스",
+		score: 0,
+}];
 
 const Question = () => {
-	const nowStep = useQuestionNowStep();
-	console.log(nowStep);
-	// console.log(nowStep.current);
+	const [step, setStep] = useState(0);
+	const getNextStep = (data) => {
+		setStep(data);
+	}
 	return (
-		<div>
-			{nowStep === -1 && <Start/>}
-			<QuestionStep step={nowStep}/>
-		</div>
+		<>
+			<h1>==={step}===</h1>
+			{step > 0 ? <QuestionStep getNextStep={getNextStep}/> : <Start getNextStep={getNextStep}/>}
+		</>
 	);
 };
 

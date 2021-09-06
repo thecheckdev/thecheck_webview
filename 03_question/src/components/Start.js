@@ -1,8 +1,9 @@
 import React from 'react';
+import { useQuestionDispatch } from "QuestionContext";
 
-const Start = () => {
+const Start = (props) => {
 	const onStart = () => {
-		console.log("시작!!!!");
+		props.getNextStep(1);
 	}
 	return (
 		<div>

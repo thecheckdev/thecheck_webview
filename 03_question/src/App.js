@@ -15,7 +15,6 @@ function App() {
 				<Route path="/question" component={Question} exact={true}/>
 				<Route path="/*" render={()=> history.push("/")} />
 			</Switch>
-			<h1>test</h1> 
 		</QuestionProvider>
 	);
 }
