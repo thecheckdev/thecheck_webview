@@ -182,5 +182,14 @@
 			font-size: 12px;
 			padding: 0 5px;
 		}
-	}
+	} 
+}
+.loading{
+	content:"";
+	@include setContent(100%, 100%, block, relative);
+	min-height: 100%;
+	margin: 0 auto; 
+	background: red;
+	@include bg("global_loading_square.gif", no-repeat, 50% 50%, 160px);
+	@include blind;
 }
